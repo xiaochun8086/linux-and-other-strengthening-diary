@@ -50,4 +50,40 @@
            "1"→"0"に書き換え。
            Ubuntuは勝手にネットに繋いで更新を探しに行くことをやめ、GUIの「アップデートがあります」というポップアップも出なくなる。
         - systemdタイマーの無効化。更新チェックのタイマーを完全に切っておく。
-      
+        ```bash
+           sudo systemctl stop apt-daily.timer
+           sudo systemctl disable apt-daily.timer
+           sudo systemctl mask apt-daily.service
+
+           sudo systemctl stop apt-daily-upgrade.timer
+           sudo systemctl disable apt-daily-upgrade.timer
+           sudo systemctl mask apt-daily-upgrade.service 
+            ```
+        - serviceとついてるものは「mask」としないと止められない。
+    - 1passwordのインストール
+        - ソフトウェアセンターを利用せず、GPGkeyを取得して、それをシステムに登録して、`apt`コマンドで管理するようにする（このほうが早いらしい）。
+        - 鍵を取得するために`curl`を準備
+            ```bash
+                sudo apt update
+                sudo apt install curl
+                ```
+        - GPG Key（署名鍵）の追加
+            ```bash
+                curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+```
+        - リポジトリの追加
+            ```bash
+                # 住所リストファイルを作成
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | \
+sudo tee /etc/apt/sources.list.d/1password.list
+```
+        - インストール
+            ```bash
+                sudo apt update
+sudo apt install 1password
+```
+        - ついでに1password-cliもインストール
+            ```bash
+            sudo apt install 1password-cli
+            ```
