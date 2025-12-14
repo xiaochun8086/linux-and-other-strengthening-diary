@@ -44,7 +44,7 @@
         コマンドでupdate＆upgradeやってるとGUIのツールが出てきてうざい  
         `sudo vi /etc/apt/apt.conf.d/20auto-upgrades`で以下の部分
 
-```
+``` 
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 ```
@@ -55,7 +55,7 @@ APT::Periodic::Unattended-Upgrade "1";
  - systemdタイマーの無効化。
     更新チェックのタイマーを完全に切っておく。--
 
-```
+``` 
 sudo systemctl stop apt-daily.timer
 sudo systemctl disable apt-daily.timer
 sudo systemctl mask apt-daily.service
@@ -70,26 +70,26 @@ sudo systemctl mask apt-daily-upgrade.service
 
     1. 鍵を取得するために`curl`を準備
 
-```bash
+``` bash
 sudo apt update
 sudo apt install curl
 ```
     2. GPG Key（署名鍵）の追加
-```bash
+``` bash
 curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
 sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
 ```
     3. リポジトリの追加
-```bash
+``` bash
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | \
 sudo tee /etc/apt/sources.list.d/1password.list
  ```
     4. インストール
-```bash
+``` bash
 sudo apt update
 sudo apt install 1password
 ```
     5. ついでに1password-cliもインストール
-```bash
+``` bash
 sudo apt install 1password-cli
 ```
