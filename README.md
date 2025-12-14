@@ -127,4 +127,86 @@ sudo apt install brave-browser
      - `curl` : 鍵の取得  
      - `gpg --dearmor` : 鍵をaptが読める形式に変換  
      - `tee` : 管理者権限が必要な場所へのファイル書き込み  
-     - `/etc/apt/sources.list.d` : 追加リポジトリのリスト置き場--
+     - `/etc/apt/sources.list.d` : 追加リポジトリのリスト置き場
+
+  - **ダウンロード元をJAISTに変更する**
+  
+    1. `/etc/apt/sources.list.d/ubuntu.sources`を書き換える
+    2. セキュリティーアップデートについては特に変える必要はなし
+
+  - **GitHubの準備**
+
+    1. 必要な道具を入れる
+    ```
+    sudo apt update
+    sudo apt install git gh
+    ```
+
+    2. PCとGitHubの紐付け
+    ```
+    gh auth login
+    ```
+     `What account do you want to log into?` → **GitHub.com**
+     `what is your preferred protocol...?` → **HTTPS**
+     `Authenticate Git with you GitHub credentials?` →**Yes**
+     `How would you like to authenticate?` →**Login with a web browser**
+
+    3. クローン(複製)する
+    ```
+    gh repo clone <user name>/<repository>
+    ```
+
+    4. 名札をつける
+    ```
+    git config --global user.name "<user name>"
+    git config --global user.email "<user email account>"
+    ```
+
+    5. テスト
+    ```
+    cd <repository>
+    vim README.md
+    git add .
+    git commit -m "<txt>"
+    git push
+    ```
+
+  - **Ubuntu Proの導入**
+    1. トークンの取得
+       URL:https://ubuntu.com/pro/dashboard
+
+    2. コマンドで接続
+    ```
+    sudo pro attach [token]
+    ```
+
+    3. 状態の確認
+    ```
+    pro status
+    ```
+    ここで表示される中で以下の３つが「Enable」になってることを確認
+     - `esm-apps` : Universeリポジトリの保護
+     - `esm-infra` : OS基盤の保護
+     - `livepatch` : 再起動なしのカーネル更新
+
+     4. Livepatchを確実に有効化する
+     ```
+     sudo pro enable livepatch
+     ```
+
+  - **gcc周りのインストール**
+    ```
+    sudo apt update
+    sudo apt install build-essential
+    ```
+      - これでインストールされるもの
+        - `gcc` : C言語コンパイラ
+        - `g++` : C++コンパイラ
+        - `make` : ビルド自動化ツール
+        - `libc6-dev` : 標準Cライブラリ開発用ファイル
+
+    インストールされたか確認
+    ```
+    gcc --version
+    ```
+    gcc (Ubuntu 11.x.x...)みたいなのが出ればOK。
