@@ -54,6 +54,7 @@ APT::Periodic::Unattended-Upgrade "1";
 
  - systemdタイマーの無効化。
     更新チェックのタイマーを完全に切っておく。
+   serviceとついてるものは「mask」としないと止められない。
 
 ``` 
 sudo systemctl stop apt-daily.timer
@@ -63,7 +64,6 @@ sudo systemctl stop apt-daily-upgrade.timer
 sudo systemctl disable apt-daily-upgrade.timer
 sudo systemctl mask apt-daily-upgrade.service
 ```
-   serviceとついてるものは「mask」としないと止められない。
 
   - 1passwordのインストール--
      ソフトウェアセンターを利用せず、GPGkeyを取得して、それをシステムに登録して、`apt`コマンドで管理するようにする（このほうが早いらしい）
@@ -98,3 +98,33 @@ sudo apt install 1password
 ``` bash
 sudo apt install 1password-cli
 ```
+
+  - Braveのインストール
+
+   1. GPG Keyのダウンロードと登録
+
+```
+sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+```
+
+   2. リポジトリの追加
+
+```
+echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+```
+
+   3. インストール
+
+```
+sudo apt update
+sudo apt install brave-browser
+```
+
+   -SnapやGUIインストーラーを使用しなかった狙い
+    - 起動速度の確保
+    - システム管理の一元化（aptによる一括update&upgrade)
+    - 使用した技術要素
+     - `curl` : 鍵の取得
+     - `gpg --dearmor` : 鍵をaptが読める形式に変換
+     - `tee` : 管理者権限が必要な場所へのファイル書き込み
+     - `/etc/apt/sources.list.d` : 追加リポジトリのリスト置き場
