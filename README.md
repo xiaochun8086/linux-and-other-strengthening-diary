@@ -23,68 +23,67 @@
 ## 2025-12-13
 ## ◯ 今日やったこと
 ## **Ubuntu導入始末記**
- 
-- インストールしたPC  
-    - Lenovo ThinkPad X240
-    - HDDをSSD256GBに換装済み
-- 下準備
-    - BIOS(UEFI)の設定  
-      1. 電源ONでF1かF12連打
-      2.  BootModeはUEFI
-      3.  Secure BootはDisabled
-      4.  F10でsave&exit
-- インストール
-    - パーティション  
-      1: 512MB    /boot/efi    
-      2: 8GB      swap  
-      3: 50GB     /  
-      4: 192GB    /home
-- 初期設定
-    - aptのみでパッケージ管理
-        - コマンドでupdate＆upgradeやってるとGUIのツールが出てきてうざい
-        - `sudo vi /etc/apt/apt.conf.d/20auto-upgrades`で以下の部分
-        -  ```bash:/etc/apt/apt.conf.d/20auto-upgrades
-           APT::Periodic::Update-Package-Lists "1";
-           APT::Periodic::Unattended-Upgrade "1";
-           ```
-           "1"→"0"に書き換え。
-           Ubuntuは勝手にネットに繋いで更新を探しに行くことをやめ、GUIの「アップデートがあります」というポップアップも出なくなる。
-        - systemdタイマーの無効化。更新チェックのタイマーを完全に切っておく。
-        ```bash
-           sudo systemctl stop apt-daily.timer
-           sudo systemctl disable apt-daily.timer
-           sudo systemctl mask apt-daily.service
 
-           sudo systemctl stop apt-daily-upgrade.timer
-           sudo systemctl disable apt-daily-upgrade.timer
-           sudo systemctl mask apt-daily-upgrade.service
-           ```
-        - serviceとついてるものは「mask」としないと止められない。
-    - 1passwordのインストール
-        - ソフトウェアセンターを利用せず、GPGkeyを取得して、それをシステムに登録して、`apt`コマンドで管理するようにする（このほうが早いらしい）。
-        - 鍵を取得するために`curl`を準備
-            ```bash
-                sudo apt update
-                sudo apt install curl
-                ```
-                
-        - GPG Key（署名鍵）の追加
-            ```bash
-                curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+インストールしたPC  
+Lenovo ThinkPad X240
+HDDをSSD256GBに換装済み
+下準備
+BIOS(UEFI)の設定  
+1.  電源ONでF1かF12連打
+2.  BootModeはUEFI
+3.  Secure BootはDisabled
+4.  F10でsave&exit
+インストール
+パーティション  
+1: 512MB    /boot/efi    
+2: 8GB      swap  
+3: 50GB     /  
+4: 192GB    /home
+初期設定
+aptのみでパッケージ管理
+コマンドでupdate＆upgradeやってるとGUIのツールが出てきてうざい
+`sudo vi /etc/apt/apt.conf.d/20auto-upgrades`で以下の部分
+```bash:/etc/apt/apt.conf.d/20auto-upgrades
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+```
+
+"1"→"0"に書き換え。
+Ubuntuは勝手にネットに繋いで更新を探しに行くことをやめ、GUIの「アップデートがあります」というポップアップも出なくなる。
+systemdタイマーの無効化。更新チェックのタイマーを完全に切っておく。
+```bash
+sudo systemctl stop apt-daily.timer
+sudo systemctl disable apt-daily.timer
+sudo systemctl mask apt-daily.service
+sudo systemctl stop apt-daily-upgrade.timer
+sudo systemctl disable apt-daily-upgrade.timer
+sudo systemctl mask apt-daily-upgrade.service
+```
+serviceとついてるものは「mask」としないと止められない。
+1passwordのインストール
+ソフトウェアセンターを利用せず、GPGkeyを取得して、それをシステムに登録して、`apt`コマンドで管理するようにする（このほうが早いらしい）。
+鍵を取得するために`curl`を準備
+```bash
+sudo apt update
+sudo apt install curl
+```
+
+GPG Key（署名鍵）の追加
+```bash
+curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
 sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
-            ```
-        - リポジトリの追加
-            ```bash
-                # 住所リストファイルを作成
+```
+リポジトリの追加
+```bash
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | \
 sudo tee /etc/apt/sources.list.d/1password.list
-            ```
-        - インストール
-            ```bash
-                sudo apt update
+ ```
+インストール
+```bash
+sudo apt update
 sudo apt install 1password
-            ```
-        - ついでに1password-cliもインストール
-            ```bash
-            sudo apt install 1password-cli
-            ```
+```
+ついでに1password-cliもインストール
+```bash`
+sudo apt install 1password-cli
+```
