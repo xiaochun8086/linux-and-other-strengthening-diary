@@ -120,11 +120,11 @@ sudo apt update
 sudo apt install brave-browser
 ```
 
-   -SnapやGUIインストーラーを使用しなかった狙い
-    - 起動速度の確保
-    - システム管理の一元化（aptによる一括update&upgrade)
-    - 使用した技術要素
-     - `curl` : 鍵の取得
-     - `gpg --dearmor` : 鍵をaptが読める形式に変換
-     - `tee` : 管理者権限が必要な場所へのファイル書き込み
-     - `/etc/apt/sources.list.d` : 追加リポジトリのリスト置き場
+   -SnapやGUIインストーラーを使用しなかった狙い  
+    - 起動速度の確保  
+    - システム管理の一元化（aptによる一括update&upgrade)  
+    - 使用した技術要素  
+     - `curl` : 鍵の取得  
+     - `gpg --dearmor` : 鍵をaptが読める形式に変換  
+     - `tee` : 管理者権限が必要な場所へのファイル書き込み  
+     - `/etc/apt/sources.list.d` : 追加リポジトリのリスト置き場--
