@@ -49,11 +49,11 @@ APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 ```
 
-        "1"→"0"に書き換え。
-        Ubuntuは勝手にネットに繋いで更新を探しに行くことをやめ、GUIの「アップデートがあります」というポップアップも出なくなる。
+   "1"→"0"に書き換え。
+    Ubuntuは勝手にネットに繋いで更新を探しに行くことをやめ、GUIの「アップデートがあります」というポップアップも出なくなる。
 
  - systemdタイマーの無効化。
-    更新チェックのタイマーを完全に切っておく。--
+    更新チェックのタイマーを完全に切っておく。
 
 ``` 
 sudo systemctl stop apt-daily.timer
@@ -63,33 +63,38 @@ sudo systemctl stop apt-daily-upgrade.timer
 sudo systemctl disable apt-daily-upgrade.timer
 sudo systemctl mask apt-daily-upgrade.service
 ```
-     serviceとついてるものは「mask」としないと止められない。--
+   serviceとついてるものは「mask」としないと止められない。
 
-  - 1passwordのインストール
+  - 1passwordのインストール--
      ソフトウェアセンターを利用せず、GPGkeyを取得して、それをシステムに登録して、`apt`コマンドで管理するようにする（このほうが早いらしい）
 
-    1. 鍵を取得するために`curl`を準備
+   1. 鍵を取得するために`curl`を準備
 
 ``` bash
 sudo apt update
 sudo apt install curl
 ```
-    2. GPG Key（署名鍵）の追加
+
+   2. GPG Key（署名鍵）の追加
+
 ``` bash
 curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
 sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
 ```
-    3. リポジトリの追加
+   3. リポジトリの追加
+
 ``` bash
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | \
 sudo tee /etc/apt/sources.list.d/1password.list
  ```
-    4. インストール
+   4. インストール
+
 ``` bash
 sudo apt update
 sudo apt install 1password
 ```
     5. ついでに1password-cliもインストール
+
 ``` bash
 sudo apt install 1password-cli
 ```
