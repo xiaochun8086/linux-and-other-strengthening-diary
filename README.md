@@ -86,14 +86,14 @@ sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
 ``` bash
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | \
 sudo tee /etc/apt/sources.list.d/1password.list
- ```
+```
    4. インストール
 
 ``` bash
 sudo apt update
 sudo apt install 1password
 ```
-    5. ついでに1password-cliもインストール
+   5. ついでに1password-cliもインストール
 
 ``` bash
 sudo apt install 1password-cli
