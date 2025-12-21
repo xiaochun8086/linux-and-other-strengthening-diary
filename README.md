@@ -210,3 +210,28 @@ sudo apt install brave-browser
     gcc --version
     ```
     gcc (Ubuntu 11.x.x...)みたいなのが出ればOK。
+
+### 2025-12-21
+
+## ブラウザの変更
+- iMacでBraveを使ってたけど、なんだか挙動がしんどそうなのでいろいろ変更。
+    - Apple製の端末（iMac、iPhone、iPad）：Safari
+    - Linux：Chrome（実は相性がいいらしい）
+
+## ThinkPadのタッチパッド設定変更
+- 逆スクロールになってたので変更
+- `/etc/X11/xorg.conf.d/` にファイルを作成
+```
+sudo vim /etc/X11/xorg.conf.d/30-touchpad.conf
+```
+- 以下の内容を記述
+```
+Section "InputClass"
+    Identifier "touchpad"
+    Driver "libinput"
+    MatchIsTouchpad "on"
+    Option "NaturalScrolling" "true"
+    Option "Tapping" "on"
+EndSection
+```
+- logout&login、または再起動
