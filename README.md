@@ -219,12 +219,17 @@ sudo apt install brave-browser
     - Linux：Chrome（実は相性がいいらしい）
 
 ## ThinkPadのタッチパッド設定変更
+
 - 逆スクロールになってたので変更
+
 - `/etc/X11/xorg.conf.d/` にファイルを作成
+
 ```
 sudo vim /etc/X11/xorg.conf.d/30-touchpad.conf
 ```
+
 - 以下の内容を記述
+
 ```
 Section "InputClass"
     Identifier "touchpad"
@@ -234,70 +239,100 @@ Section "InputClass"
     Option "Tapping" "on"
 EndSection
 ```
+
 - logout&login、または再起動
 
+
 ## zshとStarshipの導入
+
 - 作業の効率アップのため、Alacrittyを十分に活かすために導入
-    1. zshのインストール
-    ```bash
-    sudo apt update
-    sudo apt install zsh
-    ```
-    2. デフォルトシェルの切り替え
-    ```bash
-    chsh -s $(which zsh)
-    ```
-    3. Starshipのインストール
-    公式のインストールスクリプト
-    ```bash
-    curl -sS https://starship.rs/install.sh | sh
-    ```
-    4. 連携設定（.zshrc）
-    zshが起動した瞬間にStarshipを読み込む設定
-    ```bash
-    vim ~/.zshrc
-    ```
-    以下の内容を追加
-    ```.zshrc
-    eval "$(starship init zsh)"
-    ```
-    5. logout&login
+
+1. zshのインストール
+
+```bash
+sudo apt update
+sudo apt install zsh
+```
+
+2. デフォルトシェルの切り替え
+
+```bash
+chsh -s $(which zsh)
+```
+
+3. Starshipのインストール
+
+ 公式のインストールスクリプト
+```bash
+curl -sS https://starship.rs/install.sh | sh
+```
+
+4. 連携設定（.zshrc）
+
+zshが起動した瞬間にStarshipを読み込む設定
+
+```bash
+vim ~/.zshrc
+```
+
+以下の内容を追加
+
+```.zshrc
+eval "$(starship init zsh)"
+```
+5. logout&login
 
 ## i3wmでもCapsLockをCtrlキーにする
+
 - 圧倒的にそっちのほうが使いやすい。Gnomeはあっさりできたけど、i3wmではファイルで設定
-    1. configファイルへ追記
-    ```zsh
-    vim ~/.config/i3/config
-    ```
-    以下の内容を追記
-    ```text
-    # CapsLockをControlにする（ハッカーの配列）
+
+1. configファイルへ追記
+``` zsh
+vim ~/.config/i3/config
+```
+
+以下の内容を追記
+
+```text
+# CapsLockをControlにする（ハッカーの配列）
 exec_always --no-startup-id setxkbmap -option ctrl:nocaps
-    ```
-    2. 保存してリロード。またはログアウトとか
+```
+
+2. 保存してリロード。またはログアウトとか
 
 - システム全体で変えてしまう場合
-    1. ファイル編集
-    ```zsh
-    sudo vi /etc/default/keyboard
-    ```
-    2. 書き換え
-    `XKBOPTIONS=""`の部分を書き換え
-    ```
-    XKBOPTIONS="ctrl:nocaps"
-    ```
-    3. 反映
-    再起動させるか
-    `sudo udevadm trigger --subsystem-match=input --action=change`
+
+1. ファイル編集
+```zsh
+sudo vi /etc/default/keyboard
+```
+
+2. 書き換え
+`XKBOPTIONS=""`の部分を書き換え
+
+```
+XKBOPTIONS="ctrl:nocaps"
+```
+
+3. 反映
+
+再起動させるか
+
+`sudo udevadm trigger --subsystem-match=input --action=change`
 
 ## コマンドの履歴を残す
+
 - zshで入れただけだとコマンドの履歴が残らないので設定
-    1. .zshrcに追記
-    ```vim ~/.zshrc
-    ```
-    から以下を追記
-    ```
-    # ---ヒストリー（履歴）設定---
+
+1. .zshrcに追記
+```
+vim ~/.zshrc
+```
+
+から以下を追記
+
+```
+# ---ヒストリー（履歴）設定---
 HISTFILE=~/.zsh_history
 
 # メモリ上に保存する履歴の数
@@ -318,7 +353,9 @@ setopt hist_ignore_dups
 # スペースで始まるコマンドは履歴に残さない
 # （パスワードなどを打つ時のセキュリティー対策）
 setopt hist_ignore_space
-    ```
-    2. 反映
-    `source .zshrc`
+```
+
+2. 反映
+
+`source .zshrc`
 
