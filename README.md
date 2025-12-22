@@ -359,3 +359,25 @@ setopt hist_ignore_space
 
 `source .zshrc`
 
+### 2025-12-22
+
+## GitHubの手順
+
+- GitHubの基本的な手順がまだ身についてないので備忘録を作る
+
+**1. 認証ツールの導入**
+
+```zsh
+sudo apt update
+sudo apt install gh
+gh auth login
+```
+ログインすると質問される
+
+- `What account do you want to log into?` -> **GitHub.com**
+- `What is your preferred protocol for Git operations?` -> **HTTPS**
+- `Authenticate Git with your GitHub creentials?` -> **Yes**
+- `How would you like to authenticate?` -> **Login with a web browser**
+
+画面に8桁のコードが表示されるのでコピー。Enterを押すとブラウザが開くのでコードをペースト。 
+「Authorize」を押すとGitHubの接続完了。
