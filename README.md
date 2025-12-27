@@ -428,3 +428,195 @@ Starshipを起動させれば自動的に設定ファイルが作られると思
 
 
 
+###2025-12-25
+
+## **iSH導入手順**
+
+---
+
+### **0. 目的**  
+
+iPadにiSHをインストールをするものの途中で手順をしくじってやり直すということを繰り返してきた。  
+後顧の憂いを断つために導入手順を書き残しておく。
+
+---
+
+### **1. インストール直後**  
+
+まずパッケージを最新の状態にしておく。  
+
+```
+(ash)
+apk update
+apk upgrade
+```
+
+---
+
+### **2. rootにパスワードを与える**
+
+後でもいいかもしれんけど、心構えとしてここで設定しておく  
+
+```
+(ash)
+passwd
+```
+---
+
+### **3. まずは入れておくべきパッケージ**
+
+```
+(ash)
+apk add vim git openssh zsh wget curl sudo util-linux man-pages less
+```
+
+- `sudo` : 初期状態では入ってない。一般ユーザーで利用するために必須  
+- `vim`  : これがないといろいろ困る  
+- `zsh`  : iMacもThinkPadもこれに統一してるから**
+
+---
+
+### **4. sudoersの編集**
+
+これを忘れると一般ユーザーで何もできなくなる  
+
+```
+(ash)
+visudo
+```
+
+`%wheel ALL=(ALL:ALL) ALL`がコメントアウトされているので外す。  
+
+---
+
+### **5. 一般ユーザーの作成とグループ登録**  
+
+```
+(ash)
+adduser <username>
+# この際にパスワードも設定される
+addgroup <username> wheel
+```
+
+---
+
+### **6. シェルをZshに変更**  
+
+まず`zsh`がどこにインストールされているか確認する。  
+
+```
+(ash)
+which zsh
+```
+
+出力が`/bin/zsh`なら正解。  
+その後で、  
+
+```
+(ash)
+vi /etc/passwd
+```
+
+一般ユーザー名の行を探し、末尾が`:/bin/ash`となっているので、`/bin/zsh`に書き換える。  
+
+iSHを起動させるとrootにログインした状態になるので、一般ユーザーの状態で起動->ログインするようにする。  
+
+```
+(ash)
+vi /root/.profile
+```
+
+以下を記入。  
+
+```
+(/root/.profile)
+exec su - <username>
+```
+
+iSHを再起動させるか`su -`で一般ユーザーでログイン。
+
+---
+
+### **7. gccの導入**  
+
+開発セットを一気にインストールできるパッケージがある。  
+ただしiSH（Alpines Linux）とUbuntuではパッケージ名が違う。  
+
+```
+(zsh)
+sudo apk update
+sudo apk add build-base
+```
+
+`build-base`に含まれるもの
+- gcc：コンパイラ本体  
+- make: ビルド自動化ツール  
+- libc-dev: 標準ライブラリ(musl libc)のヘッダーファイル  
+
+あわせて入れておくと良いもの
+
+- `gdb`: デバッガ  
+- `binutils`: オブジェクトファイルを解析するツール  
+
+---
+
+### **8. Gitの設定**  
+
+iSHにGit環境を構築する。  
+
+  **Step 1: 道具をそろえる**  
+
+  必須なのは`git`、`opennssh`。  
+
+  **Step 2: 「名札」をつける**  
+
+  ```
+  git config --global user.name "user name"  
+  git config --global user.email "user email address"  
+  ```
+
+  **Step 3: SSH鍵を作り直す(最重要)**  
+
+  ```
+  (zsh)
+  ssh-keygen -t ed25519 -C "user_email@address.com"
+  ```
+
+  ファイルの保存場所を聞かれるが、そのまま`Enter`。  
+
+  **Step 4: 新しいSSH鍵を表示**  
+
+  ```
+  (zsh)
+  cat ~/.ssh/id_ed25519.pub
+  ```
+
+  出て来た文字列をコピーする。
+
+  **Step 4: GitHubに再登録**  
+
+  - ブラウザでGitHubのサイト->アイコンから「setting」->**SSH and GPG keys**を開く。  
+  - 古い鍵があったら削除。  
+  - **New SSH key**を押し、コピーした文字列＝新しい鍵をペースト  
+  - モバイル端末での認証用の２桁の数字が出たら、モバイルアプリのGitHubを開いて入力。  
+
+  **Step 5: 接続テスト**
+
+  ```
+  (zsh)
+  ssh -T git@github.com
+  ```
+
+  "Hi <usr>"とか出たら成功
+
+  **Step 6: リポジトリを持ってくる**
+
+  ```
+  (zsh)
+  git clone git@github.com:<user>/<repository>.git
+  ```
+
+---
+
+だいたいこれで環境は整う。  
+あとは各アプリごとの設定で。
